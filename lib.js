@@ -60,25 +60,40 @@ const jumpDown = function (game) {
 
 const isGameOver = function (game) {
   try {
-    deepEqual(game.target, game.puzzle);
-    process.exit(1);
+    deepEqual(game.target, game.puzzle, 'Target not achieved');
+    return true;
   } catch (error) {
+    return false;
   }
+};
+
+const isMoveInOption = function (move) {
+  return move < 5 && move > 0;
+};
+
+const moveTheBlank = function (game) {
+  const move = slidesTo();
+  const moves = { '1': jumpUp, '2': jumpDown, '3': jumpLeft, '4': jumpRight };
+  return isMoveInOption(move) ? moves[move](game) : game;
 };
 
 const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
 const saveGame = (game) => fs.writeFileSync('puzzle.json', game, 'utf-8');
 const slidesTo = () => process.argv[2];
 
-const main = function () {
-  const game = readGame();
-  const move = slidesTo();
-  const moveObj = { "1": jumpUp, "2": jumpDown, "3": jumpLeft, "4": jumpRight };
-  const gameRunning = moveObj[move](game);
+// eslint-disable-next-line no-process-exit
+const exitGame = (exitCode) => process.exit(exitCode);
 
-  saveGame(JSON.stringify(gameRunning));
-  isGameOver(gameRunning);
-  process.exit(0);
+const main = function () {
+  try {
+    const game = readGame();
+    const gameInPlay = moveTheBlank(game);
+
+    saveGame(JSON.stringify(gameInPlay));
+    isGameOver(gameInPlay) ? exitGame(1) : exitGame(0);
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 main();
