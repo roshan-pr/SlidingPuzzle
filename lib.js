@@ -77,7 +77,7 @@ const moveTheBlank = function (game) {
   return isMoveInOption(move) ? moves[move](game) : game;
 };
 
-const readGame = () => JSON.parse(fs.readFileSync('puzzles.json', 'utf-8'));
+const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
 const saveGame = (game) => fs.writeFileSync('puzzle.json', game, 'utf-8');
 const slidesTo = () => process.argv[2];
 
