@@ -13,6 +13,7 @@ const generateRow = function (row) {
 
 const getHeader = () =>
   '<head><title>Sliding Puzzle</title>' +
+  '<meta http-equiv="refresh" content="2">' +
   '<link rel="stylesheet" href="style.css"></head>';
 
 const generateRows = (game) =>
