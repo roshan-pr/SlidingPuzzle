@@ -25,8 +25,8 @@ const generateBody = (game) =>
 const generateHtml = (game) =>
   generateTag('html', '', getHeader() + generateBody(game));
 
-const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
-const saveGame = (game) => fs.writeFileSync('puzzle.html', game, 'utf-8');
+const readGame = () => JSON.parse(fs.readFileSync('./puzzle.json', 'utf-8'));
+const saveGame = (game) => fs.writeFileSync('html/puzzle.html', game, 'utf-8');
 
 const main = function () {
   const game = readGame();
