@@ -77,7 +77,7 @@ const moveTheBlank = function (game) {
   return isMoveInOption(move) ? moves[move](game) : game;
 };
 
-const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
+const readGame = () => JSON.parse(fs.readFileSync('puzzles.json', 'utf-8'));
 const saveGame = (game) => fs.writeFileSync('puzzle.json', game, 'utf-8');
 const slidesTo = () => process.argv[2];
 
@@ -85,15 +85,11 @@ const slidesTo = () => process.argv[2];
 const exitGame = (exitCode) => process.exit(exitCode);
 
 const main = function () {
-  try {
-    const game = readGame();
-    const gameInPlay = moveTheBlank(game);
+  const game = readGame();
+  const gameInPlay = moveTheBlank(game);
 
-    saveGame(JSON.stringify(gameInPlay));
-    isGameOver(gameInPlay) ? exitGame(1) : exitGame(0);
-  } catch (error) {
-    console.log(error.message);
-  }
+  saveGame(JSON.stringify(gameInPlay));
+  isGameOver(gameInPlay) ? exitGame(1) : exitGame(0);
 };
 
 main();

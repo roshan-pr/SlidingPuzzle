@@ -28,13 +28,9 @@ const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
 const saveGame = (game) => fs.writeFileSync('puzzle.html', game, 'utf-8');
 
 const main = function () {
-  try {
-    const game = readGame();
-    const htmlPage = generateHtml(game);
-    saveGame(htmlPage);
-  } catch (error) {
-    console.log(error.message);
-  }
+  const game = readGame();
+  const htmlPage = generateHtml(game);
+  saveGame(htmlPage);
 };
 
 main();
