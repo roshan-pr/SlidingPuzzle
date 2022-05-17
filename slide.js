@@ -64,9 +64,17 @@ const isGameOver = function (game) {
   }
 };
 
-const isMoveInOption = function (move) {
-  return move < 5 && move > 0;
-};
+const isMoveInOption = (move) => move < 5 && move > 0;
+
+const readGame = (file) => JSON.parse(fs.readFileSync(file, 'utf-8'));
+
+const saveGame = (file, game) =>
+  fs.writeFileSync(file, JSON.stringify(game), 'utf-8');
+
+const slidesTo = () => process.argv[2];
+
+// eslint-disable-next-line no-process-exit
+const exitGame = (exitCode) => process.exit(exitCode);
 
 const moveTheBlank = function (game) {
   const move = slidesTo();
@@ -74,18 +82,11 @@ const moveTheBlank = function (game) {
   return isMoveInOption(move) ? moves[move](game) : game;
 };
 
-const readGame = () => JSON.parse(fs.readFileSync('puzzle.json', 'utf-8'));
-const saveGame = (game) => fs.writeFileSync('puzzle.json', game, 'utf-8');
-const slidesTo = () => process.argv[2];
-
-// eslint-disable-next-line no-process-exit
-const exitGame = (exitCode) => process.exit(exitCode);
-
 const main = function () {
-  const game = readGame();
+  const game = readGame('./puzzle.json');
   const gameInPlay = moveTheBlank(game);
 
-  saveGame(JSON.stringify(gameInPlay));
+  saveGame('./puzzle.json', gameInPlay);
   const exitCode = isGameOver(gameInPlay) ? 10 : 0;
   exitGame(exitCode);
 };
