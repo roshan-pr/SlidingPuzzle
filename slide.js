@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 
 const getInfo = function (game, nextMove) {
-  const [row, column] = game.emptyBlock;
+  const [row, column] = emptyTile(game);
   const emptyBlock = game.puzzle[row][column];
   const [nextRow, nextColumn] = nextMove;
   const value = game.puzzle[nextRow][nextColumn];
@@ -16,7 +16,6 @@ const swapTo = function (game, nextMove) {
 
   inGame.puzzle[row][column] = value;
   inGame.puzzle[nextRow][nextColumn] = emptyBlock;
-  inGame.emptyBlock = nextMove;
   return inGame;
 };
 
@@ -38,24 +37,35 @@ const isValidMove = function (game, [row, column]) {
   return validRow && validColumn;
 };
 
+const emptyTile = function (game) {
+  return game.puzzle.reduce((context, row, index) => {
+    const nullIndex = row.indexOf(null);
+    return row.indexOf(null) > -1 ? [index, nullIndex] : context;
+  }, [-1, -1]);
+};
+
 const jumpRight = function (game) {
   const inGame = deepCopy(game);
-  return swap(inGame, [inGame.emptyBlock[0], inGame.emptyBlock[1] + 1]);
+  const emptyIndices = emptyTile(game);
+  return swap(inGame, [emptyIndices[0], emptyIndices[1] + 1]);
 };
 
 const jumpLeft = function (game) {
   const inGame = deepCopy(game);
-  return swap(inGame, [inGame.emptyBlock[0], inGame.emptyBlock[1] - 1]);
+  const emptyIndices = emptyTile(game);
+  return swap(inGame, [emptyIndices[0], emptyIndices[1] - 1]);
 };
 
 const jumpUp = function (game) {
   const inGame = deepCopy(game);
-  return swap(inGame, [inGame.emptyBlock[0] - 1, inGame.emptyBlock[1]]);
+  const emptyIndices = emptyTile(game);
+  return swap(inGame, [emptyIndices[0] - 1, emptyIndices[1]]);
 };
 
 const jumpDown = function (game) {
   const inGame = deepCopy(game);
-  return swap(inGame, [inGame.emptyBlock[0] + 1, inGame.emptyBlock[1]]);
+  const emptyIndices = emptyTile(game);
+  return swap(inGame, [emptyIndices[0] + 1, emptyIndices[1]]);
 };
 
 const isGameOver = function (game) {
