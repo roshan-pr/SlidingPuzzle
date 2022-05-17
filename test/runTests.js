@@ -15,24 +15,29 @@ const runTest = function ({ desc, test }) {
   return { isPassed: isPassed, description: desc, error: error };
 };
 
+const addPassed = (report) => report.passed + 1 || 1;
+const addFailed = (report) => report.failed + 1 || 1;
+
 const generateReport = (testResult) => {
-  const report = {};
-  testResult.map((test) => {
-    if (test.isPassed)
-      report.passed = report.passed + 1 || 1;
-    else {
-      report.failed = report.failed + 1 || 1;
-      if (report.errors) { report.errors += '\n' + test.description }
-      else { report.errors = test.description; };
+  return testResult.reduce(function (report, test) {
+    if (test.isPassed) {
+      report.passed = addPassed(report);
+      return report;
     }
-  })
-  console.log(report);
+    report.failed = addFailed(report);
+    if (report.errors) {
+      report.errors += '\n' + test.description;
+      return report;
+    }
+    report.errors = test.description;
+    return report;
+  }, {});
 };
 
 const runTests = function () {
   const errorLog = this.map(runTest);
   // console.log(errorLog);
-  generateReport(errorLog);
+  console.log(generateReport(errorLog));
   return errorLog;
 };
 

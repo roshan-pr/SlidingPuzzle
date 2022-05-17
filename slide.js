@@ -66,7 +66,8 @@ const isGameOver = function (game) {
 
 const isMoveInOption = (move) => move < 5 && move > 0;
 
-const readGame = (file) => JSON.parse(fs.readFileSync(file, 'utf-8'));
+const readGame = (file) =>
+  JSON.parse(fs.readFileSync(file, 'utf-8'));
 
 const saveGame = (file, game) =>
   fs.writeFileSync(file, JSON.stringify(game), 'utf-8');
