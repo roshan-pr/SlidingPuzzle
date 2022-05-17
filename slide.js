@@ -2,10 +2,10 @@ const assert = require('assert');
 const fs = require('fs');
 
 const getInfo = function (game, nextMove) {
-  const emptyBlock = game.puzzle[row][column];
   const [row, column] = game.emptyBlock;
-  const value = game.puzzle[nextRow][nextColumn];
+  const emptyBlock = game.puzzle[row][column];
   const [nextRow, nextColumn] = nextMove;
+  const value = game.puzzle[nextRow][nextColumn];
   return [emptyBlock, row, column, value, nextRow, nextColumn];
 };
 
