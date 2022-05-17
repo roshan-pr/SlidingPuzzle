@@ -30,11 +30,9 @@ const deepCopy = function (object) {
   return JSON.parse(JSON.stringify(object));
 };
 
-const isValidMove = function (game, [row, column]) {
+const isValidMove = function (game, [...indices]) {
   const gameStrength = game.puzzle.length - 1;
-  const validRow = row <= gameStrength && row >= 0;
-  const validColumn = column <= gameStrength && column >= 0;
-  return validRow && validColumn;
+  return indices.every((index) => index >= 0 && index <= gameStrength);
 };
 
 const emptyTile = function (game) {
@@ -44,28 +42,20 @@ const emptyTile = function (game) {
   }, [-1, -1]);
 };
 
-const jumpRight = function (game) {
-  const inGame = deepCopy(game);
-  const emptyIndices = emptyTile(game);
-  return swap(inGame, [emptyIndices[0], emptyIndices[1] + 1]);
+const jumpRight = function (blankIndices) {
+  return swap(this, [blankIndices[0], blankIndices[1] + 1]);
 };
 
-const jumpLeft = function (game) {
-  const inGame = deepCopy(game);
-  const emptyIndices = emptyTile(game);
-  return swap(inGame, [emptyIndices[0], emptyIndices[1] - 1]);
+const jumpLeft = function (blankIndices) {
+  return swap(this, [blankIndices[0], blankIndices[1] - 1]);
 };
 
-const jumpUp = function (game) {
-  const inGame = deepCopy(game);
-  const emptyIndices = emptyTile(game);
-  return swap(inGame, [emptyIndices[0] - 1, emptyIndices[1]]);
+const jumpUp = function (blankIndices) {
+  return swap(this, [blankIndices[0] - 1, blankIndices[1]]);
 };
 
-const jumpDown = function (game) {
-  const inGame = deepCopy(game);
-  const emptyIndices = emptyTile(game);
-  return swap(inGame, [emptyIndices[0] + 1, emptyIndices[1]]);
+const jumpDown = function (blankIndices) {
+  return swap(this, [blankIndices[0] + 1, blankIndices[1]]);
 };
 
 const isGameOver = function (game) {
@@ -89,8 +79,11 @@ const saveGame = (file, game) =>
 const exitGame = (exitCode) => process.exit(exitCode);
 
 const moveTheBlank = function (game, direction) {
-  const moves = { '1': jumpUp, '2': jumpDown, '3': jumpLeft, '4': jumpRight };
-  return isMoveInOption(direction) ? moves[direction](game) : game;
+  const moves = {
+    '1': jumpUp.bind(game), '2': jumpDown.bind(game),
+    '3': jumpLeft.bind(game), '4': jumpRight.bind(game)
+  };
+  return isMoveInOption(direction) ? moves[direction](emptyTile(game)) : game;
 };
 
 const slide = function (direction) {
@@ -98,7 +91,7 @@ const slide = function (direction) {
   const gameInPlay = moveTheBlank(game, direction);
 
   saveGame('./puzzle.json', gameInPlay);
-  const exitCode = isGameOver(gameInPlay) ? 10 : 0;
+  const exitCode = isGameOver(gameInPlay) ? 9 : 10;
   exitGame(exitCode);
 };
 
