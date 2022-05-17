@@ -3,7 +3,10 @@ const fs = require('fs');
 const generateTag = (tag, classes, content) =>
   ['<', tag, ' class="', classes, '">', content, '</', tag, '>'].join('');
 
-const generateTile = (tileValue) => generateTag('div', 'tile', tileValue);
+const generateTile = (tileValue) => {
+  const placeHolder = Number.isFinite(tileValue) ? tileValue : '🙂';
+  return generateTag('div', 'tile', placeHolder);
+};
 
 const generateRow = function (row) {
   const rows = row.map((tileValue) =>
@@ -19,8 +22,11 @@ const getHeader = () =>
 const generateRows = (game) =>
   game.puzzle.map((row) => generateRow(row)).join('');
 
+const generateWrapper = (game) =>
+  generateTag('div', 'wrapper', generateRows(game));
+
 const generateBody = (game) =>
-  generateTag('body', '', generateRows(game));
+  generateTag('body', '', generateWrapper(game));
 
 const generateHtml = (game) =>
   generateTag('html', '', getHeader() + generateBody(game));

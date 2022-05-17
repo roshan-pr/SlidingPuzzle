@@ -21,7 +21,10 @@ const swapTo = function (game, nextMove) {
 };
 
 const swap = function (game, nextMove) {
-  return isValidMove(game, nextMove) ? swapTo(game, nextMove) : game;
+  if (isValidMove(game, nextMove)) {
+    return swapTo(game, nextMove);
+  }
+  return game;
 };
 
 const deepCopy = function (object) {
