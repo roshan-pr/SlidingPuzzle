@@ -72,27 +72,22 @@ const readGame = (file) =>
 const saveGame = (file, game) =>
   fs.writeFileSync(file, JSON.stringify(game), 'utf-8');
 
-const slidesTo = () => process.argv[2];
-
 // eslint-disable-next-line no-process-exit
 const exitGame = (exitCode) => process.exit(exitCode);
 
-const moveTheBlank = function (game) {
-  const move = slidesTo();
+const moveTheBlank = function (game, direction) {
   const moves = { '1': jumpUp, '2': jumpDown, '3': jumpLeft, '4': jumpRight };
-  return isMoveInOption(move) ? moves[move](game) : game;
+  return isMoveInOption(direction) ? moves[direction](game) : game;
 };
 
-const main = function () {
+const slide = function (direction) {
   const game = readGame('./puzzle.json');
-  const gameInPlay = moveTheBlank(game);
+  const gameInPlay = moveTheBlank(game, direction);
 
   saveGame('./puzzle.json', gameInPlay);
   const exitCode = isGameOver(gameInPlay) ? 10 : 0;
   exitGame(exitCode);
 };
 
-main();
-
-exports.main = main;
+exports.slide = slide;
 exports.swap = swap;
