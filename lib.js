@@ -1,15 +1,11 @@
-const { deepEqual } = require('assert').strict;
+const assert = require('assert');
 const fs = require('fs');
 
-const replace = function (array, index, value) {
-  return array.splice(index, 1, value);
-};
-
 const getInfo = function (game, nextMove) {
-  const [row, column] = game.emptyBlock;
   const emptyBlock = game.puzzle[row][column];
-  const [nextRow, nextColumn] = nextMove;
+  const [row, column] = game.emptyBlock;
   const value = game.puzzle[nextRow][nextColumn];
+  const [nextRow, nextColumn] = nextMove;
   return [emptyBlock, row, column, value, nextRow, nextColumn];
 };
 
@@ -17,8 +13,9 @@ const swapTo = function (game, nextMove) {
   const inGame = deepCopy(game);
   const [emptyBlock, row, column,
     value, nextRow, nextColumn] = getInfo(inGame, nextMove);
-  replace(inGame.puzzle[nextRow], nextColumn, emptyBlock);
-  replace(inGame.puzzle[row], column, value);
+
+  inGame.puzzle[row][column] = value;
+  inGame.puzzle[nextRow][nextColumn] = emptyBlock;
   inGame.emptyBlock = nextMove;
   return inGame;
 };
@@ -60,7 +57,7 @@ const jumpDown = function (game) {
 
 const isGameOver = function (game) {
   try {
-    deepEqual(game.target, game.puzzle, 'Target not achieved');
+    assert.deepStrictEqual(game.target, game.puzzle, 'Target not achieved');
     return true;
   } catch (error) {
     return false;
@@ -89,9 +86,11 @@ const main = function () {
   const gameInPlay = moveTheBlank(game);
 
   saveGame(JSON.stringify(gameInPlay));
-  isGameOver(gameInPlay) ? exitGame(1) : exitGame(0);
+  const exitCode = isGameOver(gameInPlay) ? 10 : 0;
+  exitGame(exitCode);
 };
 
 main();
 
+exports.main = main;
 exports.swap = swap;
