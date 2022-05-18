@@ -38,7 +38,7 @@ const isValidMove = function (game, [...indices]) {
 const emptyTile = function (game) {
   return game.puzzle.reduce((context, row, index) => {
     const nullIndex = row.indexOf(null);
-    return row.indexOf(null) > -1 ? [index, nullIndex] : context;
+    return nullIndex > -1 ? [index, nullIndex] : context;
   }, [-1, -1]);
 };
 
