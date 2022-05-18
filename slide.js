@@ -42,20 +42,24 @@ const emptyTile = function (game) {
   }, [-1, -1]);
 };
 
+const row = (indices) => indices[0];
+
+const column = (indices) => indices[1];
+
 const jumpRight = function (blankIndices) {
-  return swap(this, [blankIndices[0], blankIndices[1] + 1]);
+  return swap(this, [row(blankIndices), column(blankIndices) + 1]);
 };
 
 const jumpLeft = function (blankIndices) {
-  return swap(this, [blankIndices[0], blankIndices[1] - 1]);
+  return swap(this, [row(blankIndices), column(blankIndices) - 1]);
 };
 
 const jumpUp = function (blankIndices) {
-  return swap(this, [blankIndices[0] - 1, blankIndices[1]]);
+  return swap(this, [row(blankIndices) - 1, column(blankIndices)]);
 };
 
 const jumpDown = function (blankIndices) {
-  return swap(this, [blankIndices[0] + 1, blankIndices[1]]);
+  return swap(this, [row(blankIndices) + 1, column(blankIndices)]);
 };
 
 const isGameOver = function (game) {
